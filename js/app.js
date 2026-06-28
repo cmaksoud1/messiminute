@@ -5,10 +5,10 @@
 
 // ========== YOUR API KEY ==========
 // Replace with your actual API-Football key
-const API_KEY = 'YOUR_API_KEY_HERE';
+const API_KEY = 'ad8f85c07673f75c4fea70fe580302aa';
 const API_HOST = 'v3.football.api-sports.io';
 const WC_LEAGUE_ID = 1; // FIFA World Cup
-const WC_SEASON = 2026;
+const WC_SEASON = 2022;
 
 // ============================================
 // CLASS: SidebarManager
@@ -115,17 +115,18 @@ class APIService {
   }
 
   async fetchData(endpoint, params = {}) {
-    const url = new URL(`${this.baseURL}${endpoint}`);
+    const url = new URL(`https://v3.football.api-sports.io${endpoint}`);
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
     try {
       const response = await fetch(url, {
         method: 'GET',
         headers: {
-          'x-apisports-key': this.apiKey
-        }
+          'x-apisports-key': this.apiKey,
+          'Accept': 'application/json'
+        },
+        mode: 'cors'
       });
-
       if (!response.ok) {
         throw new Error(`API Error: ${response.status}`);
       }
