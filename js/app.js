@@ -3,7 +3,7 @@
    All JS uses ES6 classes as required
    ============================================ */
 
-const API_KEY = 'ad8f85c07673f75c4fea70fe580302aa';
+const API_KEY = 'YOUR_API_KEY_HERE';
 const API_HOST = 'v3.football.api-sports.io';
 
 // ============================================
