@@ -3,21 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Teams — Predict26</title>
+  <title>Opponents — MessiMinute</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-
-  <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
     <div class="container-fluid">
       <button class="btn btn-outline-light sidebar-toggle me-3" id="sidebarToggle">
         <span class="toggle-icon">&#9776;</span>
       </button>
       <a class="navbar-brand" href="index.html">
-        <span class="brand-icon">⚽</span> PREDICT<span class="brand-accent">26</span>
+        <span class="brand-icon">🐐</span> MESSI<span class="brand-accent">MINUTE</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -25,118 +23,92 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="predictions.html">Predictions</a></li>
-          <li class="nav-item"><a class="nav-link active" href="teams.html">Teams</a></li>
+          <li class="nav-item"><a class="nav-link" href="goals.html">Goals</a></li>
+          <li class="nav-item"><a class="nav-link active" href="opponents.html">Opponents</a></li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- SIDEBAR -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h5>Quick Stats</h5>
+      <h5>🐐 Filter</h5>
       <button class="btn-close btn-close-white d-lg-none" id="sidebarClose"></button>
     </div>
     <div class="sidebar-body">
       <div class="sidebar-section">
-        <h6 class="sidebar-label">Filter by Region</h6>
-        <select class="form-select form-select-sm sidebar-filter" id="regionFilter">
-          <option value="all">All Regions</option>
-          <option value="South America">South America</option>
-          <option value="Europe">Europe</option>
-          <option value="Africa">Africa</option>
-          <option value="Asia">Asia</option>
-          <option value="North America">North/Central America</option>
-          <option value="Oceania">Oceania</option>
+        <h6 class="sidebar-label">Opponent Type</h6>
+        <select class="form-select form-select-sm sidebar-filter" id="typeFilter">
+          <option value="all">All</option>
+          <option value="club">Club Teams</option>
+          <option value="national">National Teams</option>
         </select>
       </div>
       <div class="sidebar-section">
-        <h6 class="sidebar-label">Filter by Rating</h6>
-        <select class="form-select form-select-sm sidebar-filter" id="ratingFilter">
-          <option value="all">All Ratings</option>
-          <option value="contender">🏆 Contender</option>
-          <option value="dark-horse">🐴 Dark Horse</option>
-          <option value="underdog">🔥 Underdog</option>
-          <option value="wild-card">🃏 Wild Card</option>
+        <h6 class="sidebar-label">Goals Against</h6>
+        <select class="form-select form-select-sm sidebar-filter" id="goalsFilter">
+          <option value="all">Any</option>
+          <option value="10+">10+ Goals</option>
+          <option value="5+">5+ Goals</option>
+          <option value="1-4">1-4 Goals</option>
         </select>
       </div>
       <div class="sidebar-section">
         <h6 class="sidebar-label">Navigate</h6>
         <a href="index.html" class="sidebar-nav-link">🏠 Home</a>
-        <a href="predictions.html" class="sidebar-nav-link">🎯 Predictions</a>
-        <a href="teams.html" class="sidebar-nav-link active">🏆 Teams</a>
+        <a href="goals.html" class="sidebar-nav-link">⚽ Goals by Minute</a>
+        <a href="opponents.html" class="sidebar-nav-link active">🏆 Opponents</a>
       </div>
     </div>
   </aside>
 
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
-  <!-- MAIN CONTENT -->
   <main class="main-content" id="mainContent">
     <section class="page-header">
       <div class="container">
-        <h1 class="page-title">Teams & Hot Takes 🏆</h1>
-        <p class="page-desc">My curated breakdown of every team worth talking about. Biased and proud.</p>
+        <h1 class="page-title">Messi's Victims 🏆</h1>
+        <p class="page-desc">Every team Messi has destroyed — curated with love and zero sympathy.</p>
       </div>
     </section>
 
     <section class="section-dark">
       <div class="container">
-        <!-- Search -->
         <div class="search-bar">
-          <input type="text" class="form-control search-input" id="teamSearch" placeholder="Search teams...">
+          <input type="text" class="form-control search-input" id="opponentSearch" placeholder="Search opponents...">
         </div>
-
-        <!-- Results count -->
-        <p class="results-count" id="resultsCount">Showing all teams</p>
-
-        <!-- Teams Grid -->
-        <div class="teams-grid" id="teamsGrid">
-          <!-- Teams inserted by JS from curated data -->
-        </div>
+        <p class="results-count" id="resultsCount">Showing all opponents</p>
+        <div class="teams-grid" id="opponentsGrid"></div>
       </div>
     </section>
 
-    <!-- API TEAM DETAILS SECTION -->
+    <!-- API SEARCH -->
     <section class="section-feature">
       <div class="container">
-        <h2 class="section-title">Live Team Stats from API ⚡</h2>
-        <p class="section-desc">Search for any World Cup team to get live stats</p>
-
+        <h2 class="section-title">Live Team Stats ⚡</h2>
+        <p class="section-desc">Search any team from the API-Football database for live data</p>
         <div class="search-bar">
-          <input type="text" class="form-control search-input" id="apiTeamSearch" placeholder="Search team for live stats (e.g. Argentina, France)...">
+          <input type="text" class="form-control search-input" id="apiTeamSearch" placeholder="Search team (e.g. Real Madrid, Sevilla)...">
           <button class="btn btn-accent mt-2" id="apiSearchBtn">Fetch Stats</button>
         </div>
-
-        <!-- Loading -->
         <div class="loading-container d-none" id="apiTeamLoading">
-          <div class="spinner-border text-warning" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
+          <div class="spinner-border text-warning" role="status"><span class="visually-hidden">Loading...</span></div>
           <p class="loading-text">Fetching team data...</p>
         </div>
-
-        <!-- Error -->
         <div class="error-container d-none" id="apiTeamError">
           <p class="error-icon">⚠️</p>
           <p class="error-text" id="apiTeamErrorText">Could not load team data.</p>
         </div>
-
-        <!-- API Team Results -->
-        <div class="api-team-results d-none" id="apiTeamResults">
-          <!-- Inserted by JS -->
-        </div>
+        <div class="api-team-results d-none" id="apiTeamResults"></div>
       </div>
     </section>
 
-    <!-- FOOTER -->
     <footer class="site-footer">
       <div class="container">
         <div class="footer-content">
-          <p class="footer-brand">⚽ PREDICT<span class="brand-accent">26</span></p>
+          <p class="footer-brand">🐐 MESSI<span class="brand-accent">MINUTE</span></p>
           <p class="footer-text">Built by Clarita Maksoud — Lebanese University, Faculty of Engineering, Roumieh</p>
-          <p class="footer-text">Data powered by <a href="https://www.api-football.com/" target="_blank">API-Football</a></p>
+          <p class="footer-text">Team data from <a href="https://www.api-football.com/" target="_blank">API-Football</a></p>
         </div>
       </div>
     </footer>

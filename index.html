@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Predict26 — World Cup 2026 Predictions</title>
+  <title>MessiMinute — Every Minute, Every Goal</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
@@ -17,7 +17,7 @@
         <span class="toggle-icon">&#9776;</span>
       </button>
       <a class="navbar-brand" href="index.html">
-        <span class="brand-icon">⚽</span> PREDICT<span class="brand-accent">26</span>
+        <span class="brand-icon">🐐</span> MESSI<span class="brand-accent">MINUTE</span>
       </a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
         <span class="navbar-toggler-icon"></span>
@@ -25,8 +25,8 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="predictions.html">Predictions</a></li>
-          <li class="nav-item"><a class="nav-link" href="teams.html">Teams</a></li>
+          <li class="nav-item"><a class="nav-link" href="goals.html">Goals</a></li>
+          <li class="nav-item"><a class="nav-link" href="opponents.html">Opponents</a></li>
         </ul>
       </div>
     </div>
@@ -36,192 +36,182 @@
   <!-- This sidebar collapses on smaller screens as required by the assignment -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <h5>Quick Stats</h5>
+      <h5>🐐 GOAT Stats</h5>
       <button class="btn-close btn-close-white d-lg-none" id="sidebarClose"></button>
     </div>
     <div class="sidebar-body">
       <div class="sidebar-section">
-        <h6 class="sidebar-label">Tournament</h6>
+        <h6 class="sidebar-label">Career Numbers</h6>
         <div class="stat-item">
-          <span class="stat-name">Host</span>
-          <span class="stat-value">USA, MEX, CAN</span>
+          <span class="stat-name">Total Goals</span>
+          <span class="stat-value highlight">917+</span>
         </div>
         <div class="stat-item">
-          <span class="stat-name">Teams</span>
-          <span class="stat-value">48</span>
+          <span class="stat-name">Appearances</span>
+          <span class="stat-value">1,050+</span>
         </div>
         <div class="stat-item">
-          <span class="stat-name">Matches</span>
-          <span class="stat-value">104</span>
+          <span class="stat-name">Assists</span>
+          <span class="stat-value">380+</span>
         </div>
         <div class="stat-item">
-          <span class="stat-name">Stadiums</span>
-          <span class="stat-value">16</span>
-        </div>
-      </div>
-      <div class="sidebar-section">
-        <h6 class="sidebar-label">Groups</h6>
-        <div class="group-links">
-          <a href="teams.html?group=A" class="group-badge">A</a>
-          <a href="teams.html?group=B" class="group-badge">B</a>
-          <a href="teams.html?group=C" class="group-badge">C</a>
-          <a href="teams.html?group=D" class="group-badge">D</a>
-          <a href="teams.html?group=E" class="group-badge">E</a>
-          <a href="teams.html?group=F" class="group-badge">F</a>
-          <a href="teams.html?group=G" class="group-badge">G</a>
-          <a href="teams.html?group=H" class="group-badge">H</a>
-          <a href="teams.html?group=I" class="group-badge">I</a>
-          <a href="teams.html?group=J" class="group-badge">J</a>
-          <a href="teams.html?group=K" class="group-badge">K</a>
-          <a href="teams.html?group=L" class="group-badge">L</a>
+          <span class="stat-name">Ballon d'Or</span>
+          <span class="stat-value highlight">8</span>
         </div>
       </div>
       <div class="sidebar-section">
-        <h6 class="sidebar-label">My Favorites</h6>
+        <h6 class="sidebar-label">Clubs</h6>
         <div class="stat-item">
-          <span class="stat-name">🇦🇷 Argentina</span>
-          <span class="stat-value fav">GOAT</span>
+          <span class="stat-name">FC Barcelona</span>
+          <span class="stat-value">672 goals</span>
         </div>
         <div class="stat-item">
-          <span class="stat-name">🇪🇸 Spain</span>
-          <span class="stat-value fav">Tiki-Taka</span>
+          <span class="stat-name">PSG</span>
+          <span class="stat-value">32 goals</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-name">Inter Miami</span>
+          <span class="stat-value">90+ goals</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-name">Argentina</span>
+          <span class="stat-value">123 goals</span>
         </div>
       </div>
       <div class="sidebar-section">
         <h6 class="sidebar-label">Navigate</h6>
         <a href="index.html" class="sidebar-nav-link active">🏠 Home</a>
-        <a href="predictions.html" class="sidebar-nav-link">🎯 Predictions</a>
-        <a href="teams.html" class="sidebar-nav-link">🏆 Teams</a>
+        <a href="goals.html" class="sidebar-nav-link">⚽ Goals by Minute</a>
+        <a href="opponents.html" class="sidebar-nav-link">🏆 Opponents</a>
       </div>
     </div>
   </aside>
 
-  <!-- SIDEBAR OVERLAY -->
   <div class="sidebar-overlay" id="sidebarOverlay"></div>
 
   <!-- MAIN CONTENT -->
   <main class="main-content" id="mainContent">
 
-    <!-- HERO SECTION -->
+    <!-- HERO -->
     <section class="hero-section">
       <div class="hero-overlay"></div>
       <div class="hero-content">
-        <p class="hero-eyebrow">FIFA World Cup 2026</p>
-        <h1 class="hero-title">PREDICT<span class="brand-accent">26</span></h1>
-        <p class="hero-subtitle">Pick your winners. Track your score. Prove you know football.</p>
-        <a href="predictions.html" class="btn btn-accent btn-lg">Start Predicting</a>
+        <p class="hero-eyebrow">The Greatest of All Time</p>
+        <h1 class="hero-title">MESSI<span class="brand-accent">MINUTE</span></h1>
+        <p class="hero-subtitle">Every minute of a match, Messi has scored. Explore 917+ career goals — by the minute they happened.</p>
+        <a href="goals.html" class="btn btn-accent btn-lg">Explore Goals</a>
       </div>
       <div class="hero-countdown" id="heroCountdown">
-        <p class="countdown-label">World Cup Final Countdown</p>
-        <div class="countdown-timer" id="countdownTimer">
+        <p class="countdown-label">Career Goal Counter</p>
+        <div class="countdown-timer">
           <div class="countdown-block">
-            <span class="countdown-number" id="countDays">00</span>
-            <span class="countdown-unit">Days</span>
+            <span class="countdown-number">917</span>
+            <span class="countdown-unit">Goals</span>
           </div>
           <div class="countdown-block">
-            <span class="countdown-number" id="countHours">00</span>
-            <span class="countdown-unit">Hours</span>
+            <span class="countdown-number">123</span>
+            <span class="countdown-unit">Argentina</span>
           </div>
           <div class="countdown-block">
-            <span class="countdown-number" id="countMins">00</span>
-            <span class="countdown-unit">Min</span>
+            <span class="countdown-number">672</span>
+            <span class="countdown-unit">Barça</span>
           </div>
           <div class="countdown-block">
-            <span class="countdown-number" id="countSecs">00</span>
-            <span class="countdown-unit">Sec</span>
+            <span class="countdown-number">8</span>
+            <span class="countdown-unit">Ballon d'Or</span>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- LIVE MATCHES SECTION -->
-    <section class="section-dark">
-      <div class="container">
-        <h2 class="section-title">Live & Upcoming Matches</h2>
-        <p class="section-desc">World Cup match data from API-Football (2022 season — 2026 data not yet available in free API tier)</p>
-
-        <!-- Loading State -->
-        <div class="loading-container" id="matchesLoading">
-          <div class="spinner-border text-warning" role="status">
-            <span class="visually-hidden">Loading...</span>
-          </div>
-          <p class="loading-text">Loading matches...</p>
-        </div>
-
-        <!-- Error State -->
-        <div class="error-container d-none" id="matchesError">
-          <p class="error-icon">⚠️</p>
-          <p class="error-text">Could not load matches. Please try again later.</p>
-          <button class="btn btn-outline-warning btn-sm" onclick="app.loadMatches()">Retry</button>
-        </div>
-
-        <!-- Empty State -->
-        <div class="empty-container d-none" id="matchesEmpty">
-          <p class="empty-icon">📭</p>
-          <p class="empty-text">No matches scheduled right now.</p>
-        </div>
-
-        <!-- Matches Grid -->
-        <div class="matches-grid d-none" id="matchesGrid">
-          <!-- Matches inserted by JS -->
-        </div>
-      </div>
-    </section>
-
-    <!-- DID YOU KNOW SECTION -->
+    <!-- DID YOU KNOW -->
     <section class="section-feature">
       <div class="container">
-        <h2 class="section-title">Did You Know? 🤔</h2>
+        <h2 class="section-title">Did You Know? 🤯</h2>
         <div class="facts-grid">
           <div class="fact-card">
-            <div class="fact-emoji">🏟️</div>
-            <h5 class="fact-title">Biggest World Cup Ever</h5>
-            <p class="fact-text">2026 is the first World Cup with 48 teams and 104 matches — hosted across 3 countries!</p>
+            <div class="fact-emoji">🏆</div>
+            <h5 class="fact-title">19 World Cup Goals</h5>
+            <p class="fact-text">Messi is Argentina's all-time World Cup top scorer with 19 goals across 6 tournaments (2006–2026). Nobody in Albiceleste history comes close.</p>
+          </div>
+          <div class="fact-card">
+            <div class="fact-emoji">🔥</div>
+            <h5 class="fact-title">7 Straight WC Matches</h5>
+            <p class="fact-text">First player in history to score in 7 consecutive World Cup matches. From the 2022 quarter-final to the 2026 group stage — unstoppable.</p>
+          </div>
+          <div class="fact-card">
+            <div class="fact-emoji">⏱️</div>
+            <h5 class="fact-title">48 Stoppage Time Goals</h5>
+            <p class="fact-text">Messi has scored 48 goals in stoppage time. The man doesn't believe a match is over until HE says so. Including THAT Inter Miami debut free kick.</p>
+          </div>
+          <div class="fact-card">
+            <div class="fact-emoji">📅</div>
+            <h5 class="fact-title">91 Goals in 2012</h5>
+            <p class="fact-text">In 2012, Messi shattered Gerd Müller's 40-year record by scoring 91 goals in a single calendar year. A record that may never be broken.</p>
+          </div>
+          <div class="fact-card">
+            <div class="fact-emoji">🌍</div>
+            <h5 class="fact-title">Every Round of a World Cup</h5>
+            <p class="fact-text">In 2022, Messi became the first player EVER to score in every stage of a single World Cup — group, R16, QF, semi, and final. Complete domination.</p>
+          </div>
+          <div class="fact-card">
+            <div class="fact-emoji">6️⃣</div>
+            <h5 class="fact-title">6 World Cups</h5>
+            <p class="fact-text">Messi is one of only two players (alongside Ronaldo) to play in 6 World Cups (2006-2026). And he's scored in ALL of them. Longevity + greatness.</p>
           </div>
           <div class="fact-card">
             <div class="fact-emoji">🐐</div>
-            <h5 class="fact-title">Messi's Last Dance?</h5>
-            <p class="fact-text">Leo Messi could play his final World Cup at age 39. The GOAT looking to defend Argentina's crown.</p>
+            <h5 class="fact-title">8 Ballon d'Or Awards</h5>
+            <p class="fact-text">Eight. No one else has more than five. Messi won the golden ball more times than most legends won it once. The trophy was made for him.</p>
           </div>
           <div class="fact-card">
-            <div class="fact-emoji">🇱🇧</div>
-            <h5 class="fact-title">Lebanon's Dream</h5>
-            <p class="fact-text">With 48 teams, more nations than ever have a shot. Could Lebanon qualify one day? We believe!</p>
-          </div>
-          <div class="fact-card">
-            <div class="fact-emoji">⚽</div>
-            <h5 class="fact-title">New Format</h5>
-            <p class="fact-text">12 groups of 4 teams, top 2 + best 3rd-place teams advance. More drama, more upsets!</p>
+            <div class="fact-emoji">🇦🇷</div>
+            <h5 class="fact-title">123 Goals for Argentina</h5>
+            <p class="fact-text">Argentina's all-time top scorer with 123 international goals in 202 appearances. Surpassed Batistuta's record in 2016 and never looked back.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- HOT TAKES SECTION -->
+    <!-- FEATURED GOALS -->
     <section class="section-dark">
       <div class="container">
-        <h2 class="section-title">My Hot Takes 🔥</h2>
-        <p class="section-desc">Biased? Maybe. Wrong? Never. (Okay, sometimes.)</p>
+        <h2 class="section-title">Iconic Goals by Minute ⚽</h2>
+        <p class="section-desc">A taste of what you'll find — the full collection is on the Goals page</p>
+        <div class="matches-grid" id="featuredGoals">
+          <!-- Inserted by JS -->
+        </div>
+        <div class="text-center mt-4">
+          <a href="goals.html" class="btn btn-accent">See All Goals →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- MY HOT TAKES -->
+    <section class="section-feature">
+      <div class="container">
+        <h2 class="section-title">Why Messi is the GOAT 🐐</h2>
+        <p class="section-desc">Not up for debate. But here's the evidence anyway.</p>
         <div class="takes-grid">
           <div class="take-card">
-            <div class="take-verdict win">🏆 Winner</div>
-            <h4>Argentina wins it again</h4>
-            <p>Messi magic + defending champions momentum. La Scaloneta doesn't stop. 🇦🇷</p>
+            <div class="take-verdict win">🏆 The Trophy</div>
+            <h4>World Cup 2022</h4>
+            <p>The only thing missing from his collection. Then he went and got it in the most dramatic final in history. Debate over.</p>
           </div>
           <div class="take-card">
-            <div class="take-verdict dark-horse">🐴 Dark Horse</div>
-            <h4>Spain shocks everyone</h4>
-            <p>Young squad, Barça DNA, Yamal-era tiki-taka. Watch out for La Roja. 🇪🇸</p>
+            <div class="take-verdict dark-horse">📊 The Numbers</div>
+            <h4>917+ Goals, 380+ Assists</h4>
+            <p>A goal every 104 minutes for 20+ years. Plus the assists, the dribbles, the through balls. He does EVERYTHING.</p>
           </div>
           <div class="take-card">
-            <div class="take-verdict flop">💀 Biggest Flop</div>
-            <h4>England disappoints again</h4>
-            <p>It's coming home? It's going home more like. Sorry lads. 🏴󠁧󠁢󠁥󠁮󠁧󠁿</p>
+            <div class="take-verdict flop">❌ "But Ronaldo..."</div>
+            <h4>Stop. Just stop.</h4>
+            <p>Ronaldo is incredible. A legend. But Messi's playmaking ability, vision, and efficiency put him on a different planet. Sorry not sorry. 🐐</p>
           </div>
           <div class="take-card">
-            <div class="take-verdict player">⭐ Player to Watch</div>
-            <h4>Lamine Yamal</h4>
-            <p>Barça's wonderkid on the World Cup stage. The future is NOW. 🇪🇸</p>
+            <div class="take-verdict player">💙❤️ Barça DNA</div>
+            <h4>672 Goals for Barcelona</h4>
+            <p>One club. One man. One legend. From La Masia to the greatest scorer in Barcelona history. Visca el Barça i Visca Messi!</p>
           </div>
         </div>
       </div>
@@ -231,10 +221,10 @@
     <footer class="site-footer">
       <div class="container">
         <div class="footer-content">
-          <p class="footer-brand">⚽ PREDICT<span class="brand-accent">26</span></p>
+          <p class="footer-brand">🐐 MESSI<span class="brand-accent">MINUTE</span></p>
           <p class="footer-text">Built by Clarita Maksoud — Lebanese University, Faculty of Engineering, Roumieh</p>
           <p class="footer-text">Full Stack Development Final Project 2026</p>
-          <p class="footer-text">Data powered by <a href="https://www.api-football.com/" target="_blank">API-Football</a></p>
+          <p class="footer-text">Goal data sourced from <a href="https://www.messistats.com" target="_blank">MessiStats</a> & <a href="https://www.transfermarkt.com" target="_blank">Transfermarkt</a> | Team data from <a href="https://www.api-football.com/" target="_blank">API-Football</a></p>
         </div>
       </div>
     </footer>

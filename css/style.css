@@ -1,22 +1,24 @@
 /* ============================================
-   PREDICT26 — World Cup 2026 Predictions
-   Custom CSS — Dark Stadium Theme
+   MESSIMINUTE — Every Minute, Every Goal
+   Custom CSS — Argentina Light Theme
    ============================================ */
 
 /* ---------- CSS VARIABLES ---------- */
 :root {
-  --bg-primary: #0a0f1c;
-  --bg-secondary: #111827;
-  --bg-card: #1a2236;
-  --bg-card-hover: #222d45;
-  --accent-gold: #f5a623;
+  --bg-primary: #f0f4f8;
+  --bg-secondary: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card-hover: #f8fafc;
+  --accent-gold: #C5A55A;
+  --accent-argentina: #6CACE4;
+  --accent-dark-blue: #1a3a5c;
   --accent-green: #22c55e;
   --accent-red: #ef4444;
-  --accent-blue: #3b82f6;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --border-color: #2a3550;
+  --accent-blue: #6CACE4;
+  --text-primary: #1a2332;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+  --border-color: #d4dce6;
   --sidebar-width: 260px;
   --navbar-height: 64px;
   --font-display: 'Oswald', sans-serif;
@@ -48,9 +50,9 @@ a:hover {
 
 /* ---------- NAVBAR ---------- */
 .navbar {
-  background-color: rgba(10, 15, 28, 0.95);
+  background-color: var(--accent-dark-blue);
   backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(117, 170, 219, 0.3);
   height: var(--navbar-height);
   z-index: 1050;
   padding: 0 1rem;
@@ -65,7 +67,7 @@ a:hover {
 }
 
 .brand-accent {
-  color: var(--accent-gold);
+  color: var(--accent-argentina);
 }
 
 .brand-icon {
@@ -84,7 +86,7 @@ a:hover {
 
 .nav-link:hover,
 .nav-link.active {
-  color: var(--accent-gold) !important;
+  color: var(--accent-argentina) !important;
 }
 
 .sidebar-toggle {
@@ -100,11 +102,12 @@ a:hover {
   left: 0;
   width: var(--sidebar-width);
   height: calc(100vh - var(--navbar-height));
-  background-color: var(--bg-secondary);
-  border-right: 1px solid var(--border-color);
+  background-color: var(--accent-dark-blue);
+  border-right: 1px solid rgba(117, 170, 219, 0.3);
   overflow-y: auto;
   z-index: 1040;
   transition: transform 0.3s ease;
+  color: #ffffff;
 }
 
 .sidebar-header {
@@ -112,7 +115,7 @@ a:hover {
   justify-content: space-between;
   align-items: center;
   padding: 1.2rem 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(117, 170, 219, 0.2);
 }
 
 .sidebar-header h5 {
@@ -120,7 +123,7 @@ a:hover {
   font-size: 1rem;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: var(--accent-gold);
+  color: var(--accent-argentina);
   margin: 0;
 }
 
@@ -130,7 +133,7 @@ a:hover {
 
 .sidebar-section {
   padding: 1rem;
-  border-bottom: 1px solid var(--border-color);
+  border-bottom: 1px solid rgba(117, 170, 219, 0.2);
 }
 
 .sidebar-label {
@@ -138,7 +141,7 @@ a:hover {
   font-size: 0.75rem;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--accent-argentina);
   margin-bottom: 0.8rem;
 }
 
@@ -151,12 +154,16 @@ a:hover {
 }
 
 .stat-name {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 .stat-value {
-  color: var(--text-primary);
+  color: #ffffff;
   font-weight: 600;
+}
+
+.stat-value.highlight {
+  color: var(--accent-gold);
 }
 
 .stat-value.fav {
@@ -193,7 +200,7 @@ a:hover {
 .sidebar-nav-link {
   display: block;
   padding: 0.5rem 0;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.7);
   font-size: 0.9rem;
   transition: color 0.2s ease;
 }
@@ -204,9 +211,9 @@ a:hover {
 }
 
 .sidebar-filter {
-  background-color: var(--bg-card);
-  border: 1px solid var(--border-color);
-  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(117, 170, 219, 0.3);
+  color: #ffffff;
   font-size: 0.85rem;
 }
 
@@ -300,14 +307,17 @@ a:hover {
   justify-content: center;
   min-height: 85vh;
   background: linear-gradient(
-    135deg,
-    var(--bg-primary) 0%,
-    #0d1b3e 40%,
-    #132044 70%,
-    #0a1628 100%
+    180deg,
+    #6CACE4 0%,
+    #6CACE4 30%,
+    #FFFFFF 30%,
+    #FFFFFF 70%,
+    #6CACE4 70%,
+    #6CACE4 100%
   );
   text-align: center;
   overflow: hidden;
+  color: #1a3a5c;
 }
 
 .hero-overlay {
@@ -343,6 +353,11 @@ a:hover {
   letter-spacing: 4px;
   line-height: 1;
   margin-bottom: 1rem;
+  color: var(--accent-dark-blue);
+}
+
+.hero-title .brand-accent {
+  color: var(--accent-gold);
 }
 
 .hero-subtitle {
@@ -397,8 +412,8 @@ a:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
+  background: var(--accent-dark-blue);
+  border: 1px solid rgba(108, 172, 228, 0.3);
   border-radius: 10px;
   padding: 0.8rem 1.2rem;
   min-width: 70px;
@@ -415,7 +430,7 @@ a:hover {
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 /* ---------- SECTIONS ---------- */
@@ -446,8 +461,9 @@ a:hover {
 /* ---------- PAGE HEADER ---------- */
 .page-header {
   padding: 3rem 0 2rem;
-  background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+  background: linear-gradient(135deg, var(--accent-dark-blue), #2a5a8c);
   border-bottom: 1px solid var(--border-color);
+  color: #ffffff;
 }
 
 .page-title {
@@ -455,10 +471,11 @@ a:hover {
   font-size: 2.2rem;
   font-weight: 700;
   letter-spacing: 2px;
+  color: #ffffff;
 }
 
 .page-desc {
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.8);
   margin-top: 0.5rem;
 }
 
@@ -499,9 +516,9 @@ a:hover {
 }
 
 .match-card:hover {
-  border-color: var(--accent-gold);
+  border-color: var(--accent-argentina);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(117, 170, 219, 0.2);
 }
 
 .match-status {
@@ -561,6 +578,12 @@ a:hover {
   margin-bottom: 0.5rem;
 }
 
+.team-flag-large {
+  font-size: 2.8rem;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
 .team-name {
   font-family: var(--font-display);
   font-size: 0.85rem;
@@ -587,6 +610,13 @@ a:hover {
   font-size: 0.8rem;
   color: var(--text-muted);
   text-align: center;
+}
+
+.match-venue {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  text-align: center;
+  margin-top: 0.3rem;
 }
 
 /* ---------- PREDICTIONS ---------- */
@@ -661,13 +691,14 @@ a:hover {
   font-size: 0.95rem;
   padding: 0.7rem 1rem;
   border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .search-input:focus {
   background-color: var(--bg-card);
-  border-color: var(--accent-gold);
+  border-color: var(--accent-argentina);
   color: var(--text-primary);
-  box-shadow: 0 0 0 3px rgba(245, 166, 35, 0.15);
+  box-shadow: 0 0 0 3px rgba(117, 170, 219, 0.2);
 }
 
 .search-input::placeholder {
@@ -694,11 +725,13 @@ a:hover {
   padding: 1.5rem;
   text-align: center;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .fact-card:hover {
   transform: translateY(-3px);
-  border-color: var(--accent-gold);
+  border-color: var(--accent-argentina);
+  box-shadow: 0 8px 24px rgba(117, 170, 219, 0.15);
 }
 
 .fact-emoji {
@@ -796,12 +829,13 @@ a:hover {
   border-radius: 12px;
   padding: 1.5rem;
   transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .team-card:hover {
   transform: translateY(-3px);
-  border-color: var(--accent-gold);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  border-color: var(--accent-argentina);
+  box-shadow: 0 8px 24px rgba(117, 170, 219, 0.15);
 }
 
 .team-card-header {
@@ -935,10 +969,101 @@ a:hover {
 }
 
 /* ---------- FOOTER ---------- */
+
+/* ---------- GOAL CARDS ---------- */
+.goal-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.goal-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent-argentina);
+  box-shadow: 0 8px 24px rgba(117, 170, 219, 0.15);
+}
+
+.goal-minute-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--accent-gold), #e09000);
+  color: var(--bg-primary);
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  margin-bottom: 0.8rem;
+}
+
+.goal-comp {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.6rem;
+  background: rgba(117, 170, 219, 0.2);
+  color: var(--accent-argentina);
+}
+
+.goal-matchup {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.3rem;
+}
+
+.goal-date {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.6rem;
+}
+
+.goal-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-style: italic;
+}
+
+.goal-meta {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.8rem;
+  flex-wrap: wrap;
+}
+
+.goal-tag {
+  font-size: 0.7rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-muted);
+  font-family: var(--font-display);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.stat-value.highlight {
+  color: var(--accent-gold);
+}
+
+/* ---------- FOOTER ---------- */
 .site-footer {
-  background: var(--bg-secondary);
-  border-top: 1px solid var(--border-color);
+  background: var(--accent-dark-blue);
+  border-top: 1px solid rgba(117, 170, 219, 0.3);
   padding: 2rem 0;
+  color: #ffffff;
 }
 
 .footer-content {
@@ -955,7 +1080,7 @@ a:hover {
 
 .footer-text {
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.6);
   margin-bottom: 0.3rem;
 }
 

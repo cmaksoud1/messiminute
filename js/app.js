@@ -1,20 +1,15 @@
 /* ============================================
-   PREDICT26 — Main JavaScript (ES6 Classes)
+   MESSIMINUTE — Main JavaScript (ES6 Classes)
    All JS uses ES6 classes as required
    ============================================ */
 
-// ========== YOUR API KEY ==========
-// Replace with your actual API-Football key
 const API_KEY = 'ad8f85c07673f75c4fea70fe580302aa';
 const API_HOST = 'v3.football.api-sports.io';
-const WC_LEAGUE_ID = 1; // FIFA World Cup
-const WC_SEASON = 2022;
 
 // ============================================
 // CLASS: SidebarManager
 // Handles the collapsible sidebar (unique requirement)
 // The sidebar collapses on screens smaller than 992px
-// and can be toggled via the hamburger button
 // ============================================
 class SidebarManager {
   constructor() {
@@ -24,849 +19,352 @@ class SidebarManager {
     this.closeBtn = document.getElementById('sidebarClose');
     this.init();
   }
-
   init() {
-    if (this.toggleBtn) {
-      this.toggleBtn.addEventListener('click', () => this.toggle());
-    }
-    if (this.closeBtn) {
-      this.closeBtn.addEventListener('click', () => this.close());
-    }
-    if (this.overlay) {
-      this.overlay.addEventListener('click', () => this.close());
-    }
-    // Close sidebar on window resize to desktop
-    window.addEventListener('resize', () => {
-      if (window.innerWidth >= 992) {
-        this.close();
-      }
-    });
+    if (this.toggleBtn) this.toggleBtn.addEventListener('click', () => this.toggle());
+    if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
+    if (this.overlay) this.overlay.addEventListener('click', () => this.close());
+    window.addEventListener('resize', () => { if (window.innerWidth >= 992) this.close(); });
   }
-
-  toggle() {
-    if (this.sidebar) {
-      this.sidebar.classList.toggle('active');
-      this.overlay.classList.toggle('active');
-    }
-  }
-
-  close() {
-    if (this.sidebar) {
-      this.sidebar.classList.remove('active');
-      this.overlay.classList.remove('active');
-    }
-  }
-}
-
-// ============================================
-// CLASS: CountdownTimer
-// Displays countdown to the World Cup Final
-// ============================================
-class CountdownTimer {
-  constructor() {
-    // World Cup 2026 Final: July 19, 2026 at MetLife Stadium
-    this.targetDate = new Date('2026-07-19T20:00:00-04:00');
-    this.daysEl = document.getElementById('countDays');
-    this.hoursEl = document.getElementById('countHours');
-    this.minsEl = document.getElementById('countMins');
-    this.secsEl = document.getElementById('countSecs');
-    if (this.daysEl) {
-      this.start();
-    }
-  }
-
-  start() {
-    this.update();
-    setInterval(() => this.update(), 1000);
-  }
-
-  update() {
-    const now = new Date();
-    const diff = this.targetDate - now;
-
-    if (diff <= 0) {
-      this.daysEl.textContent = '00';
-      this.hoursEl.textContent = '00';
-      this.minsEl.textContent = '00';
-      this.secsEl.textContent = '00';
-      return;
-    }
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-    const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-    this.daysEl.textContent = String(days).padStart(2, '0');
-    this.hoursEl.textContent = String(hours).padStart(2, '0');
-    this.minsEl.textContent = String(mins).padStart(2, '0');
-    this.secsEl.textContent = String(secs).padStart(2, '0');
-  }
+  toggle() { if (this.sidebar) { this.sidebar.classList.toggle('active'); this.overlay.classList.toggle('active'); } }
+  close() { if (this.sidebar) { this.sidebar.classList.remove('active'); this.overlay.classList.remove('active'); } }
 }
 
 // ============================================
 // CLASS: APIService
-// Handles all API-Football requests
+// Handles API-Football requests (API requirement)
 // ============================================
 class APIService {
-  constructor(apiKey) {
-    this.apiKey = apiKey;
-    this.baseURL = `https://${API_HOST}`;
-  }
-
-  async fetchData(endpoint, params = {}) {
-    const url = new URL(`https://v3.football.api-sports.io${endpoint}`);
-    Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
-
-    try {
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'x-apisports-key': this.apiKey,
-          'Accept': 'application/json'
-        },
-        mode: 'cors'
-      });
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status}`);
-      }
-
-      const data = await response.json();
-      return data;
-    } catch (error) {
-      console.error('API Fetch Error:', error);
-      throw error;
-    }
-  }
-
-  async getMatches() {
-    return this.fetchData('/fixtures', {
-      league: WC_LEAGUE_ID,
-      season: WC_SEASON
-    });
-  }
-
-  async getTeams() {
-    return this.fetchData('/teams', {
-      league: WC_LEAGUE_ID,
-      season: WC_SEASON
-    });
-  }
-
+  constructor(apiKey) { this.apiKey = apiKey; }
   async searchTeam(teamName) {
-    return this.fetchData('/teams', {
-      search: teamName
-    });
-  }
-
-  async getStandings() {
-    return this.fetchData('/standings', {
-      league: WC_LEAGUE_ID,
-      season: WC_SEASON
-    });
+    const url = new URL('https://' + API_HOST + '/teams');
+    url.searchParams.append('search', teamName);
+    try {
+      const response = await fetch(url, { method:'GET', headers:{ 'x-apisports-key':this.apiKey, 'Accept':'application/json' }, mode:'cors' });
+      if (!response.ok) throw new Error('API Error: ' + response.status);
+      return await response.json();
+    } catch (error) { console.error('API Fetch Error:', error); throw error; }
   }
 }
 
 // ============================================
-// CLASS: MatchRenderer
-// Renders match cards in the DOM
+// CLASS: GoalDatabase
+// 95 REAL verified Messi goals from MessiStats.com
+// One goal per minute: 2' to 90' + stoppage + extra time
+// Manually curated & verified by the site creator
 // ============================================
-class MatchRenderer {
-  constructor(containerId, loadingId, errorId, emptyId) {
-    this.container = document.getElementById(containerId);
-    this.loading = document.getElementById(loadingId);
-    this.error = document.getElementById(errorId);
-    this.empty = document.getElementById(emptyId);
-  }
-
-  showLoading() {
-    if (this.loading) this.loading.classList.remove('d-none');
-    if (this.error) this.error.classList.add('d-none');
-    if (this.empty) this.empty.classList.add('d-none');
-    if (this.container) this.container.classList.add('d-none');
-  }
-
-  showError() {
-    if (this.loading) this.loading.classList.add('d-none');
-    if (this.error) this.error.classList.remove('d-none');
-    if (this.empty) this.empty.classList.add('d-none');
-    if (this.container) this.container.classList.add('d-none');
-  }
-
-  showEmpty() {
-    if (this.loading) this.loading.classList.add('d-none');
-    if (this.error) this.error.classList.add('d-none');
-    if (this.empty) this.empty.classList.remove('d-none');
-    if (this.container) this.container.classList.add('d-none');
-  }
-
-  showContent() {
-    if (this.loading) this.loading.classList.add('d-none');
-    if (this.error) this.error.classList.add('d-none');
-    if (this.empty) this.empty.classList.add('d-none');
-    if (this.container) this.container.classList.remove('d-none');
-  }
-
-  renderMatches(matches) {
-    if (!this.container) return;
-    this.container.innerHTML = '';
-
-    matches.forEach(match => {
-      const fixture = match.fixture;
-      const teams = match.teams;
-      const goals = match.goals;
-      const statusShort = fixture.status.short;
-
-      let statusClass = 'upcoming';
-      let statusText = 'Upcoming';
-
-      if (['1H', '2H', 'HT', 'ET', 'P', 'BT', 'LIVE'].includes(statusShort)) {
-        statusClass = 'live';
-        statusText = 'LIVE';
-      } else if (['FT', 'AET', 'PEN'].includes(statusShort)) {
-        statusClass = 'finished';
-        statusText = 'Finished';
-      }
-
-      const matchDate = new Date(fixture.date);
-      const dateStr = matchDate.toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-      });
-
-      const scoreHTML = goals.home !== null
-        ? `<span class="match-score">${goals.home} - ${goals.away}</span>`
-        : `<span class="match-vs">VS</span>`;
-
-      const card = document.createElement('div');
-      card.className = 'match-card';
-      card.setAttribute('data-status', statusShort);
-      card.setAttribute('data-home', teams.home.name.toLowerCase());
-      card.setAttribute('data-away', teams.away.name.toLowerCase());
-
-      card.innerHTML = `
-        <span class="match-status ${statusClass}">${statusText}</span>
-        <div class="match-teams">
-          <div class="match-team">
-            <img src="${teams.home.logo}" alt="${teams.home.name}" class="team-logo">
-            <span class="team-name">${teams.home.name}</span>
-          </div>
-          ${scoreHTML}
-          <div class="match-team">
-            <img src="${teams.away.logo}" alt="${teams.away.name}" class="team-logo">
-            <span class="team-name">${teams.away.name}</span>
-          </div>
-        </div>
-        <p class="match-info">${dateStr} • ${fixture.venue?.name || 'TBD'}</p>
-      `;
-
-      this.container.appendChild(card);
-    });
-  }
-}
-
-// ============================================
-// CLASS: PredictionManager
-// Handles user predictions with localStorage
-// ============================================
-class PredictionManager {
+class GoalDatabase {
   constructor() {
-    this.predictions = this.loadPredictions();
-  }
+    this.goals = [
+      // ===== FIRST HALF: Minutes 2-45 =====
+      { id:1, minute:"2'", minuteNum:2, date:"2023-06-15", opponent:"Australia", result:"Argentina 2-0 Australia", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:2, minute:"3'", minuteNum:3, date:"2018-03-14", opponent:"Chelsea", result:"Barcelona 3-0 Chelsea", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Right foot" },
+      { id:3, minute:"4'", minuteNum:4, date:"2008-10-22", opponent:"FC Basel", result:"FC Basel 0-5 Barcelona", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:4, minute:"5'", minuteNum:5, date:"2013-03-12", opponent:"AC Milan", result:"Barcelona 4-0 AC Milan", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:5, minute:"6'", minuteNum:6, date:"2006-03-01", opponent:"Croatia", result:"Croatia 3-2 Argentina", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:6, minute:"7'", minuteNum:7, date:"2015-08-11", opponent:"Sevilla", result:"Barcelona 5-4 Sevilla", competition:"UEFA Super Cup", team:"FC Barcelona", type:"Free kick", foot:"Left foot" },
+      { id:7, minute:"8'", minuteNum:8, date:"2022-06-05", opponent:"Estonia", result:"Argentina 5-0 Estonia", competition:"Friendly", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:8, minute:"9'", minuteNum:9, date:"2009-04-08", opponent:"Bayern Munich", result:"Barcelona 4-0 Bayern Munich", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:9, minute:"10'", minuteNum:10, date:"2010-09-07", opponent:"Spain", result:"Argentina 4-1 Spain", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:10, minute:"11'", minuteNum:11, date:"2007-03-10", opponent:"Real Madrid", result:"Barcelona 3-3 Real Madrid", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:11, minute:"12'", minuteNum:12, date:"2013-09-11", opponent:"Paraguay", result:"Paraguay 2-5 Argentina", competition:"WC Qualifier", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:12, minute:"13'", minuteNum:13, date:"2009-01-06", opponent:"Atlético Madrid", result:"Atlético Madrid 1-3 Barcelona", competition:"Copa del Rey", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:13, minute:"14'", minuteNum:14, date:"2018-06-26", opponent:"Nigeria", result:"Nigeria 1-2 Argentina", competition:"World Cup", team:"Argentina", type:"Field goal", foot:"Right foot" },
+      { id:14, minute:"15'", minuteNum:15, date:"2015-02-08", opponent:"Athletic Bilbao", result:"Athletic Bilbao 2-5 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Free kick", foot:"Left foot" },
+      { id:15, minute:"16'", minuteNum:16, date:"2017-03-23", opponent:"Chile", result:"Argentina 1-0 Chile", competition:"WC Qualifier", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:16, minute:"17'", minuteNum:17, date:"2026-06-16", opponent:"Algeria", result:"Argentina 3-0 Algeria", competition:"World Cup", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:17, minute:"18'", minuteNum:18, date:"2013-03-02", opponent:"Real Madrid", result:"Real Madrid 2-1 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:18, minute:"19'", minuteNum:19, date:"2025-10-24", opponent:"Nashville SC", result:"Inter Miami 3-1 Nashville SC", competition:"MLS", team:"Inter Miami", type:"Field goal", foot:"Head" },
+      { id:19, minute:"20'", minuteNum:20, date:"2015-05-30", opponent:"Athletic Bilbao", result:"Athletic Bilbao 1-3 Barcelona", competition:"Copa del Rey", team:"FC Barcelona", type:"Solo run", foot:"Left foot" },
+      { id:20, minute:"21'", minuteNum:21, date:"2016-11-01", opponent:"Manchester City", result:"Manchester City 3-1 Barcelona", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:21, minute:"22'", minuteNum:22, date:"2022-10-05", opponent:"Benfica", result:"Benfica 1-1 PSG", competition:"Champions League", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:22, minute:"23'", minuteNum:23, date:"2022-12-18", opponent:"France", result:"Argentina 3-3 France (pen 4-2)", competition:"World Cup", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:23, minute:"24'", minuteNum:24, date:"2017-03-04", opponent:"Celta de Vigo", result:"Barcelona 5-0 Celta de Vigo", competition:"La Liga", team:"FC Barcelona", type:"Solo run", foot:"Left foot" },
+      { id:24, minute:"25'", minuteNum:25, date:"2012-03-24", opponent:"Real Mallorca", result:"Real Mallorca 0-2 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Free kick", foot:"Left foot" },
+      { id:25, minute:"26'", minuteNum:26, date:"2023-04-08", opponent:"OGC Nice", result:"OGC Nice 0-2 PSG", competition:"Ligue 1", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:26, minute:"27'", minuteNum:27, date:"2012-02-19", opponent:"Valencia", result:"Barcelona 5-1 Valencia", competition:"La Liga", team:"FC Barcelona", type:"Rebound", foot:"Left foot" },
+      { id:27, minute:"28'", minuteNum:28, date:"2021-02-16", opponent:"PSG", result:"Barcelona 1-4 PSG", competition:"Champions League", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:28, minute:"29'", minuteNum:29, date:"2022-10-01", opponent:"OGC Nice", result:"PSG 2-1 OGC Nice", competition:"Ligue 1", team:"PSG", type:"Free kick", foot:"Left foot" },
+      { id:29, minute:"30'", minuteNum:30, date:"2018-02-24", opponent:"Girona", result:"Barcelona 6-1 Girona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:30, minute:"31'", minuteNum:31, date:"2012-06-09", opponent:"Brazil", result:"Argentina 4-3 Brazil", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:31, minute:"32'", minuteNum:32, date:"2018-09-18", opponent:"PSV Eindhoven", result:"Barcelona 4-0 PSV Eindhoven", competition:"Champions League", team:"FC Barcelona", type:"Free kick", foot:"Left foot" },
+      { id:32, minute:"33'", minuteNum:33, date:"2010-04-10", opponent:"Real Madrid", result:"Real Madrid 0-2 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Right foot" },
+      { id:33, minute:"34'", minuteNum:34, date:"2022-12-13", opponent:"Croatia", result:"Argentina 3-0 Croatia", competition:"World Cup", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:34, minute:"35'", minuteNum:35, date:"2015-06-13", opponent:"Paraguay", result:"Argentina 2-2 Paraguay", competition:"Copa América", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:35, minute:"36'", minuteNum:36, date:"2009-05-02", opponent:"Real Madrid", result:"Real Madrid 2-6 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:36, minute:"37'", minuteNum:37, date:"2010-11-20", opponent:"UD Almería", result:"UD Almería 0-8 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Rebound", foot:"Left foot" },
+      { id:37, minute:"38'", minuteNum:38, date:"2013-04-02", opponent:"PSG", result:"PSG 2-2 Barcelona", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:38, minute:"39'", minuteNum:39, date:"2013-02-03", opponent:"Valencia", result:"Valencia 1-1 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:39, minute:"40'", minuteNum:40, date:"2023-04-15", opponent:"RC Lens", result:"PSG 3-1 RC Lens", competition:"Ligue 1", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:40, minute:"41'", minuteNum:41, date:"2012-04-03", opponent:"AC Milan", result:"Barcelona 3-1 AC Milan", competition:"Champions League", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:41, minute:"42'", minuteNum:42, date:"2021-06-28", opponent:"Bolivia", result:"Bolivia 1-4 Argentina", competition:"Copa América", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:42, minute:"43'", minuteNum:43, date:"2016-09-01", opponent:"Uruguay", result:"Argentina 1-0 Uruguay", competition:"WC Qualifier", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:43, minute:"44'", minuteNum:44, date:"2022-10-25", opponent:"Maccabi Haifa", result:"PSG 7-2 Maccabi Haifa", competition:"Champions League", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:44, minute:"45'", minuteNum:45, date:"2011-08-17", opponent:"Real Madrid", result:"Barcelona 3-2 Real Madrid", competition:"Spanish Super Cup", team:"FC Barcelona", type:"Field goal", foot:"Right foot" },
 
-  loadPredictions() {
-    const saved = localStorage.getItem('predict26_predictions');
-    return saved ? JSON.parse(saved) : {};
-  }
+      // ===== SECOND HALF: Minutes 46-90 =====
+      { id:45, minute:"46'", minuteNum:46, date:"2015-05-02", opponent:"Córdoba", result:"Córdoba 0-8 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Head" },
+      { id:46, minute:"47'", minuteNum:47, date:"2022-06-05", opponent:"Estonia", result:"Argentina 5-0 Estonia", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:47, minute:"48'", minuteNum:48, date:"2019-11-09", opponent:"Celta de Vigo", result:"Barcelona 4-1 Celta de Vigo", competition:"La Liga", team:"FC Barcelona", type:"Free kick", foot:"Left foot" },
+      { id:48, minute:"50'", minuteNum:50, date:"2017-03-08", opponent:"PSG", result:"Barcelona 6-1 PSG", competition:"Champions League", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:49, minute:"51'", minuteNum:51, date:"2024-04-13", opponent:"Sporting KC", result:"Sporting KC 2-3 Inter Miami", competition:"MLS", team:"Inter Miami", type:"Field goal", foot:"Left foot" },
+      { id:50, minute:"52'", minuteNum:52, date:"2013-09-11", opponent:"Paraguay", result:"Paraguay 2-5 Argentina", competition:"WC Qualifier", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:51, minute:"53'", minuteNum:53, date:"2011-04-16", opponent:"Real Madrid", result:"Real Madrid 1-1 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:52, minute:"54'", minuteNum:54, date:"2025-06-19", opponent:"FC Porto", result:"Inter Miami 2-1 FC Porto", competition:"Club World Cup", team:"Inter Miami", type:"Free kick", foot:"Left foot" },
+      { id:53, minute:"55'", minuteNum:55, date:"2022-10-29", opponent:"ES Troyes AC", result:"PSG 4-3 ES Troyes AC", competition:"Ligue 1", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:54, minute:"56'", minuteNum:56, date:"2015-03-08", opponent:"Rayo Vallecano", result:"Barcelona 6-1 Rayo Vallecano", competition:"La Liga", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:55, minute:"57'", minuteNum:57, date:"2024-03-02", opponent:"Orlando City", result:"Inter Miami 5-0 Orlando City", competition:"MLS", team:"Inter Miami", type:"Rebound", foot:"Chest" },
+      { id:56, minute:"58'", minuteNum:58, date:"2023-02-04", opponent:"Toulouse FC", result:"PSG 2-1 Toulouse FC", competition:"Ligue 1", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:57, minute:"59'", minuteNum:59, date:"2015-11-24", opponent:"AS Roma", result:"Barcelona 6-1 AS Roma", competition:"Champions League", team:"FC Barcelona", type:"Rebound", foot:"Left foot" },
+      { id:58, minute:"60'", minuteNum:60, date:"2011-11-15", opponent:"Colombia", result:"Colombia 1-2 Argentina", competition:"WC Qualifier", team:"Argentina", type:"Rebound", foot:"Left foot" },
+      { id:59, minute:"61'", minuteNum:61, date:"2009-11-14", opponent:"Spain", result:"Spain 2-1 Argentina", competition:"Friendly", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:60, minute:"62'", minuteNum:62, date:"2024-03-02", opponent:"Orlando City", result:"Inter Miami 5-0 Orlando City", competition:"MLS", team:"Inter Miami", type:"Field goal", foot:"Head" },
+      { id:61, minute:"63'", minuteNum:63, date:"2012-09-08", opponent:"Paraguay", result:"Argentina 3-1 Paraguay", competition:"WC Qualifier", team:"Argentina", type:"Free kick", foot:"Left foot" },
+      { id:62, minute:"64'", minuteNum:64, date:"2017-03-04", opponent:"Celta de Vigo", result:"Barcelona 5-0 Celta de Vigo", competition:"La Liga", team:"FC Barcelona", type:"Solo run", foot:"Left foot" },
+      { id:63, minute:"65'", minuteNum:65, date:"2012-10-13", opponent:"Uruguay", result:"Argentina 3-0 Uruguay", competition:"WC Qualifier", team:"Argentina", type:"Field goal", foot:"Right foot" },
+      { id:64, minute:"66'", minuteNum:66, date:"2014-10-14", opponent:"Hong Kong", result:"Hong Kong 0-7 Argentina", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:65, minute:"67'", minuteNum:67, date:"2021-10-19", opponent:"RB Leipzig", result:"PSG 3-2 RB Leipzig", competition:"Champions League", team:"PSG", type:"Rebound", foot:"Left foot" },
+      { id:66, minute:"68'", minuteNum:68, date:"2016-06-10", opponent:"Panama", result:"Argentina 5-0 Panama", competition:"Copa América", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:67, minute:"69'", minuteNum:69, date:"2017-09-12", opponent:"Juventus", result:"Barcelona 3-0 Juventus", competition:"Champions League", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:68, minute:"70'", minuteNum:70, date:"2012-08-23", opponent:"Real Madrid", result:"Barcelona 3-2 Real Madrid", competition:"Spanish Super Cup", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:69, minute:"71'", minuteNum:71, date:"2011-03-08", opponent:"Arsenal", result:"Barcelona 3-1 Arsenal", competition:"Champions League", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:70, minute:"72'", minuteNum:72, date:"2023-01-11", opponent:"Angers SCO", result:"PSG 2-0 Angers SCO", competition:"Ligue 1", team:"PSG", type:"Field goal", foot:"Right foot" },
+      { id:71, minute:"73'", minuteNum:73, date:"2022-12-09", opponent:"Netherlands", result:"Netherlands 2-2 Argentina (pen 3-4)", competition:"World Cup", team:"Argentina", type:"Penalty", foot:"Left foot" },
+      { id:72, minute:"74'", minuteNum:74, date:"2016-02-03", opponent:"Valencia", result:"Barcelona 7-0 Valencia", competition:"Copa del Rey", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:73, minute:"75'", minuteNum:75, date:"2026-05-09", opponent:"Toronto FC", result:"Toronto FC 2-4 Inter Miami", competition:"MLS", team:"Inter Miami", type:"Field goal", foot:"Left foot" },
+      { id:74, minute:"76'", minuteNum:76, date:"2021-12-07", opponent:"Club Brugge", result:"PSG 4-1 Club Brugge", competition:"Champions League", team:"PSG", type:"Penalty", foot:"Left foot" },
+      { id:75, minute:"77'", minuteNum:77, date:"2025-08-27", opponent:"Orlando City", result:"Inter Miami 3-1 Orlando City", competition:"CONCACAF Champions Cup", team:"Inter Miami", type:"Penalty", foot:"Left foot" },
+      { id:76, minute:"78'", minuteNum:78, date:"2016-06-10", opponent:"Panama", result:"Argentina 5-0 Panama", competition:"Copa América", team:"Argentina", type:"Free kick", foot:"Left foot" },
+      { id:77, minute:"79'", minuteNum:79, date:"2012-05-05", opponent:"Espanyol", result:"Barcelona 4-0 Espanyol", competition:"La Liga", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:78, minute:"80'", minuteNum:80, date:"2007-05-20", opponent:"Atlético Madrid", result:"Atlético Madrid 0-6 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:79, minute:"81'", minuteNum:81, date:"2025-10-19", opponent:"Nashville SC", result:"Nashville SC 2-5 Inter Miami", competition:"MLS", team:"Inter Miami", type:"Field goal", foot:"Left foot" },
+      { id:80, minute:"82'", minuteNum:82, date:"2019-05-01", opponent:"Liverpool", result:"Barcelona 3-0 Liverpool", competition:"Champions League", team:"FC Barcelona", type:"Free kick", foot:"Left foot" },
+      { id:81, minute:"83'", minuteNum:83, date:"2009-02-11", opponent:"France", result:"France 0-2 Argentina", competition:"Friendly", team:"Argentina", type:"Solo run", foot:"Left foot" },
+      { id:82, minute:"84'", minuteNum:84, date:"2014-03-23", opponent:"Real Madrid", result:"Real Madrid 3-4 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Penalty", foot:"Left foot" },
+      { id:83, minute:"85'", minuteNum:85, date:"2012-06-09", opponent:"Brazil", result:"Argentina 4-3 Brazil", competition:"Friendly", team:"Argentina", type:"Solo run", foot:"Left foot" },
+      { id:84, minute:"86'", minuteNum:86, date:"2022-08-06", opponent:"Clermont Foot", result:"Clermont Foot 0-5 PSG", competition:"Ligue 1", team:"PSG", type:"Field goal", foot:"Left foot" },
+      { id:85, minute:"87'", minuteNum:87, date:"2022-09-27", opponent:"Jamaica", result:"Argentina 3-0 Jamaica", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:86, minute:"88'", minuteNum:88, date:"2015-09-08", opponent:"Mexico", result:"Argentina 2-2 Mexico", competition:"Friendly", team:"Argentina", type:"Field goal", foot:"Left foot" },
+      { id:87, minute:"89'", minuteNum:89, date:"2020-01-30", opponent:"Leganés", result:"Barcelona 5-0 Leganés", competition:"Copa del Rey", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:88, minute:"90'", minuteNum:90, date:"2011-02-09", opponent:"Portugal", result:"Argentina 2-1 Portugal", competition:"Friendly", team:"Argentina", type:"Penalty", foot:"Left foot" },
 
-  savePredictions() {
-    localStorage.setItem('predict26_predictions', JSON.stringify(this.predictions));
-  }
+      // ===== STOPPAGE TIME (90+) — Verified from MessiStats =====
+      { id:89, minute:"90+1'", minuteNum:91, date:"2008-12-13", opponent:"Real Madrid", result:"Barcelona 2-0 Real Madrid", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:90, minute:"90+2'", minuteNum:92, date:"2017-04-23", opponent:"Real Madrid", result:"Real Madrid 2-3 Barcelona", competition:"La Liga", team:"FC Barcelona", type:"Field goal", foot:"Left foot" },
+      { id:91, minute:"90+3'", minuteNum:93, date:"2021-07-03", opponent:"Ecuador", result:"Argentina 3-0 Ecuador", competition:"Copa América", team:"Argentina", type:"Free kick", foot:"Left foot" },
+      { id:92, minute:"90+4'", minuteNum:94, date:"2023-07-22", opponent:"Cruz Azul", result:"Cruz Azul 1-2 Inter Miami", competition:"Leagues Cup", team:"Inter Miami", type:"Free kick", foot:"Left foot" },
+      { id:93, minute:"90+5'", minuteNum:95, date:"2026-06-22", opponent:"Austria", result:"Argentina 2-0 Austria", competition:"World Cup", team:"Argentina", type:"Rebound", foot:"Left foot" },
+      { id:94, minute:"90+6'", minuteNum:96, date:"2025-10-24", opponent:"Nashville SC", result:"Inter Miami 3-1 Nashville SC", competition:"MLS", team:"Inter Miami", type:"Field goal", foot:"Left foot" },
 
-  setPrediction(matchId, teamId) {
-    this.predictions[matchId] = teamId;
-    this.savePredictions();
-    this.updateScore();
-  }
-
-  getPrediction(matchId) {
-    return this.predictions[matchId] || null;
-  }
-
-  updateScore() {
-    const totalEl = document.getElementById('totalScore');
-    const countEl = document.getElementById('totalPredictions');
-    if (totalEl) {
-      totalEl.textContent = Object.keys(this.predictions).length;
-    }
-    if (countEl) {
-      countEl.textContent = Object.keys(this.predictions).length;
-    }
-  }
-
-  renderPredictionCards(matches, container) {
-    if (!container) return;
-    container.innerHTML = '';
-
-    matches.forEach(match => {
-      const fixture = match.fixture;
-      const teams = match.teams;
-      const goals = match.goals;
-      const statusShort = fixture.status.short;
-      const prediction = this.getPrediction(fixture.id);
-
-      let statusClass = 'upcoming';
-      let statusText = 'Upcoming';
-
-      if (['1H', '2H', 'HT', 'ET', 'P', 'BT', 'LIVE'].includes(statusShort)) {
-        statusClass = 'live';
-        statusText = 'LIVE';
-      } else if (['FT', 'AET', 'PEN'].includes(statusShort)) {
-        statusClass = 'finished';
-        statusText = 'Finished';
-      }
-
-      const matchDate = new Date(fixture.date);
-      const dateStr = matchDate.toLocaleDateString('en-US', {
-        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit'
-      });
-
-      const scoreHTML = goals.home !== null
-        ? `<span class="match-score">${goals.home} - ${goals.away}</span>`
-        : `<span class="match-vs">VS</span>`;
-
-      // Determine prediction result for finished matches
-      let homeClass = prediction === teams.home.id ? 'selected' : '';
-      let awayClass = prediction === teams.away.id ? 'selected' : '';
-      let drawClass = prediction === 'draw' ? 'selected' : '';
-
-      if (statusClass === 'finished' && prediction) {
-        const homeWon = goals.home > goals.away;
-        const awayWon = goals.away > goals.home;
-        const isDraw = goals.home === goals.away;
-
-        if (prediction === teams.home.id) {
-          homeClass = homeWon ? 'correct' : 'wrong';
-        } else if (prediction === teams.away.id) {
-          awayClass = awayWon ? 'correct' : 'wrong';
-        } else if (prediction === 'draw') {
-          drawClass = isDraw ? 'correct' : 'wrong';
-        }
-      }
-
-      const isFinished = statusClass === 'finished';
-      const disabledAttr = isFinished ? 'disabled' : '';
-
-      const card = document.createElement('div');
-      card.className = 'prediction-card';
-      card.setAttribute('data-status', statusShort);
-      card.setAttribute('data-home', teams.home.name.toLowerCase());
-      card.setAttribute('data-away', teams.away.name.toLowerCase());
-
-      card.innerHTML = `
-        <span class="match-status ${statusClass}">${statusText}</span>
-        <div class="match-teams">
-          <div class="match-team">
-            <img src="${teams.home.logo}" alt="${teams.home.name}" class="team-logo">
-            <span class="team-name">${teams.home.name}</span>
-          </div>
-          ${scoreHTML}
-          <div class="match-team">
-            <img src="${teams.away.logo}" alt="${teams.away.name}" class="team-logo">
-            <span class="team-name">${teams.away.name}</span>
-          </div>
-        </div>
-        <p class="match-info">${dateStr}</p>
-        <div class="prediction-actions">
-          <button class="btn-predict ${homeClass}" ${disabledAttr}
-            onclick="app.predict(${fixture.id}, ${teams.home.id})">${teams.home.name}</button>
-          <button class="btn-predict ${drawClass}" ${disabledAttr}
-            onclick="app.predict(${fixture.id}, 'draw')">Draw</button>
-          <button class="btn-predict ${awayClass}" ${disabledAttr}
-            onclick="app.predict(${fixture.id}, ${teams.away.id})">${teams.away.name}</button>
-        </div>
-      `;
-
-      container.appendChild(card);
-    });
-  }
-}
-
-// ============================================
-// CLASS: TeamDatabase
-// Curated data — 16+ real team items (assignment requirement)
-// ============================================
-class TeamDatabase {
-  constructor() {
-    this.teams = [
-      {
-        name: "Argentina",
-        flag: "🇦🇷",
-        region: "South America",
-        rating: "contender",
-        ratingLabel: "🏆 Contender",
-        keyPlayer: "Lionel Messi",
-        hotTake: "The defending champions and MY team. Messi at 39 might be playing his last World Cup, and La Scaloneta will fight to the death for him. Back-to-back? Absolutely possible. 🐐",
-        group: "TBD"
-      },
-      {
-        name: "Spain",
-        flag: "🇪🇸",
-        region: "Europe",
-        rating: "contender",
-        ratingLabel: "🏆 Contender",
-        keyPlayer: "Lamine Yamal",
-        hotTake: "Euro 2024 champions with the youngest, most exciting squad in the world. Yamal + Pedri + Gavi = Barça DNA running through the national team. My second favorite. Visca! 🇪🇸",
-        group: "TBD"
-      },
-      {
-        name: "France",
-        flag: "🇫🇷",
-        region: "Europe",
-        rating: "contender",
-        ratingLabel: "🏆 Contender",
-        keyPlayer: "Kylian Mbappé",
-        hotTake: "Always dangerous but always drama. Mbappé is a monster, but can France's ego fit in one locker room? They'll either win it all or implode. No in between.",
-        group: "TBD"
-      },
-      {
-        name: "Brazil",
-        flag: "🇧🇷",
-        region: "South America",
-        rating: "contender",
-        ratingLabel: "🏆 Contender",
-        keyPlayer: "Vinicius Jr.",
-        hotTake: "Five-time champions always show up when it matters. Vinicius Jr. is the most exciting player on the planet, but Brazil's defense gives me anxiety. Samba football is back though.",
-        group: "TBD"
-      },
-      {
-        name: "England",
-        flag: "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-        region: "Europe",
-        rating: "contender",
-        ratingLabel: "🏆 Contender",
-        keyPlayer: "Jude Bellingham",
-        hotTake: "It's never coming home. I said what I said. Incredible squad on paper but they find new ways to disappoint every single tournament. Bellingham can't carry them alone. 💀",
-        group: "TBD"
-      },
-      {
-        name: "Germany",
-        flag: "🇩🇪",
-        region: "Europe",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Florian Wirtz",
-        hotTake: "Die Mannschaft is rebuilding and Wirtz is the real deal. After embarrassing group exits recently, they have something to prove. Never count out German efficiency.",
-        group: "TBD"
-      },
-      {
-        name: "Portugal",
-        flag: "🇵🇹",
-        region: "Europe",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Cristiano Ronaldo",
-        hotTake: "Ronaldo at 41 in a World Cup? Respect the dedication but it's time to pass the torch. Portugal has incredible depth now — they might be better without him starting. Hot take, I know.",
-        group: "TBD"
-      },
-      {
-        name: "Netherlands",
-        flag: "🇳🇱",
-        region: "Europe",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Xavi Simons",
-        hotTake: "Total football is alive and well. Xavi Simons is a baller and this Dutch team has the perfect mix of youth and experience. Semi-finals at minimum.",
-        group: "TBD"
-      },
-      {
-        name: "Mexico",
-        flag: "🇲🇽",
-        region: "North America",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Santiago Giménez",
-        hotTake: "Co-hosts with home advantage and passionate fans. Can they finally break the Round of 16 curse? Playing at home might just be the push they need. ¡Vamos México!",
-        group: "TBD"
-      },
-      {
-        name: "USA",
-        flag: "🇺🇸",
-        region: "North America",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Christian Pulisic",
-        hotTake: "Home nation advantage is REAL. Pulisic leading the charge in front of American crowds? The hype will be insane. They could surprise a lot of people. Quarter-finals is realistic.",
-        group: "TBD"
-      },
-      {
-        name: "Japan",
-        flag: "🇯🇵",
-        region: "Asia",
-        rating: "underdog",
-        ratingLabel: "🔥 Underdog",
-        keyPlayer: "Takefusa Kubo",
-        hotTake: "The giant killers. Beat Germany and Spain in 2022, and they've only gotten better. Japanese precision + European league experience = dangerous. Watch out.",
-        group: "TBD"
-      },
-      {
-        name: "Morocco",
-        flag: "🇲🇦",
-        region: "Africa",
-        rating: "underdog",
-        ratingLabel: "🔥 Underdog",
-        keyPlayer: "Achraf Hakimi",
-        hotTake: "2022 semi-finalists who proved Africa belongs at the top table. Hakimi is world class, the defense is rock solid, and they play with insane heart. Don't sleep on the Atlas Lions.",
-        group: "TBD"
-      },
-      {
-        name: "South Korea",
-        flag: "🇰🇷",
-        region: "Asia",
-        rating: "underdog",
-        ratingLabel: "🔥 Underdog",
-        keyPlayer: "Son Heung-min",
-        hotTake: "Son is one of the best in the world and he'll give everything. South Korea always fights — remember 2002? They can upset anyone on their day.",
-        group: "TBD"
-      },
-      {
-        name: "Canada",
-        flag: "🇨🇦",
-        region: "North America",
-        rating: "wild-card",
-        ratingLabel: "🃏 Wild Card",
-        keyPlayer: "Alphonso Davies",
-        hotTake: "Co-hosts with Davies tearing down the left flank at home? Yes please. First World Cup since 1986 and they'll have the crowd behind them. Anything can happen.",
-        group: "TBD"
-      },
-      {
-        name: "Saudi Arabia",
-        flag: "🇸🇦",
-        region: "Asia",
-        rating: "wild-card",
-        ratingLabel: "🃏 Wild Card",
-        keyPlayer: "Salem Al-Dawsari",
-        hotTake: "They beat Argentina in 2022. ARGENTINA. Al-Dawsari scored one of the greatest World Cup goals ever. Never underestimate Saudi football. They have nothing to lose.",
-        group: "TBD"
-      },
-      {
-        name: "Senegal",
-        flag: "🇸🇳",
-        region: "Africa",
-        rating: "underdog",
-        ratingLabel: "🔥 Underdog",
-        keyPlayer: "Sadio Mané",
-        hotTake: "AFCON champions with incredible talent across European leagues. Physical, fast, and organized. Senegal is the team nobody wants to face in the group stage.",
-        group: "TBD"
-      },
-      {
-        name: "Colombia",
-        flag: "🇨🇴",
-        region: "South America",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Luis Díaz",
-        hotTake: "Luis Díaz is pure magic on the wing. Colombia plays with passion and flair — when they're on, they can beat anyone. Copa América 2024 finalists for a reason.",
-        group: "TBD"
-      },
-      {
-        name: "Croatia",
-        flag: "🇭🇷",
-        region: "Europe",
-        rating: "dark-horse",
-        ratingLabel: "🐴 Dark Horse",
-        keyPlayer: "Luka Modrić",
-        hotTake: "Modrić is eternal. Finalist in 2018, third in 2022 — Croatia just refuses to lose. The smallest country with the biggest heart. Post-Modrić era is scary though.",
-        group: "TBD"
-      }
+      // ===== EXTRA TIME =====
+      { id:95, minute:"108'", minuteNum:108, date:"2022-12-18", opponent:"France", result:"Argentina 3-3 France (pen 4-2)", competition:"World Cup", team:"Argentina", type:"Rebound", foot:"Left foot" },
     ];
   }
 
-  getAll() {
-    return this.teams;
-  }
+  getAll() { return this.goals; }
+  getFeatured() { return this.goals.filter(g => [22, 19, 80, 48, 90, 92, 95].includes(g.id)); }
 
-  filterByRegion(region) {
-    if (region === 'all') return this.teams;
-    return this.teams.filter(t => t.region === region);
-  }
-
-  filterByRating(rating) {
-    if (rating === 'all') return this.teams;
-    return this.teams.filter(t => t.rating === rating);
-  }
-
-  search(query) {
-    const q = query.toLowerCase().trim();
-    if (!q) return this.teams;
-    return this.teams.filter(t =>
-      t.name.toLowerCase().includes(q) ||
-      t.region.toLowerCase().includes(q) ||
-      t.keyPlayer.toLowerCase().includes(q)
-    );
-  }
-
-  filter(query, region, rating) {
-    let results = this.teams;
-
+  filter(query, comp, minuteRange, team) {
+    let results = this.goals;
     if (query) {
       const q = query.toLowerCase().trim();
-      results = results.filter(t =>
-        t.name.toLowerCase().includes(q) ||
-        t.region.toLowerCase().includes(q) ||
-        t.keyPlayer.toLowerCase().includes(q)
-      );
+      const numQuery = parseInt(q);
+      if (!isNaN(numQuery)) {
+        results = results.filter(g => g.minuteNum === numQuery || g.minute.startsWith(numQuery + "'"));
+      } else {
+        results = results.filter(g =>
+          g.opponent.toLowerCase().includes(q) ||
+          g.competition.toLowerCase().includes(q) ||
+          g.result.toLowerCase().includes(q) ||
+          g.team.toLowerCase().includes(q) ||
+          g.type.toLowerCase().includes(q) ||
+          g.minute.includes(q)
+        );
+      }
     }
-
-    if (region && region !== 'all') {
-      results = results.filter(t => t.region === region);
+    if (comp && comp !== 'all') {
+      results = results.filter(g => g.competition.toLowerCase().includes(comp.toLowerCase()));
     }
-
-    if (rating && rating !== 'all') {
-      results = results.filter(t => t.rating === rating);
+    if (minuteRange && minuteRange !== 'all') {
+      if (minuteRange === '90+') results = results.filter(g => g.minuteNum >= 90 && g.minuteNum <= 100);
+      else if (minuteRange === 'extra') results = results.filter(g => g.minuteNum > 100);
+      else {
+        const [min, max] = minuteRange.split('-').map(Number);
+        results = results.filter(g => g.minuteNum >= min && g.minuteNum <= max);
+      }
     }
-
+    if (team && team !== 'all') results = results.filter(g => g.team.includes(team));
     return results;
   }
 }
 
 // ============================================
-// CLASS: TeamRenderer
-// Renders team cards from curated data
+// CLASS: GoalRenderer
 // ============================================
-class TeamRenderer {
-  constructor(containerId) {
-    this.container = document.getElementById(containerId);
-  }
-
-  render(teams) {
+class GoalRenderer {
+  constructor(containerId) { this.container = document.getElementById(containerId); }
+  render(goals) {
     if (!this.container) return;
     this.container.innerHTML = '';
-
-    if (teams.length === 0) {
-      this.container.innerHTML = `
-        <div class="empty-container">
-          <p class="empty-icon">🔍</p>
-          <p class="empty-text">No teams match your search.</p>
-        </div>
-      `;
+    if (goals.length === 0) {
+      this.container.innerHTML = '<div class="empty-container"><p class="empty-icon">🔍</p><p class="empty-text">No goals match your filters.</p></div>';
       return;
     }
-
-    teams.forEach(team => {
+    goals.forEach(goal => {
       const card = document.createElement('div');
-      card.className = 'team-card';
-
-      card.innerHTML = `
-        <div class="team-card-header">
-          <span class="team-flag">${team.flag}</span>
-          <div>
-            <h4 class="team-card-name">${team.name}</h4>
-            <span class="team-card-region">${team.region}</span>
-          </div>
-        </div>
-        <span class="team-rating-badge ${team.rating}">${team.ratingLabel}</span>
-        <p class="team-hot-take">"${team.hotTake}"</p>
-        <p class="team-key-player">⭐ Key Player: <strong>${team.keyPlayer}</strong></p>
-      `;
-
+      card.className = 'goal-card';
+      card.innerHTML =
+        '<div class="goal-minute-badge">' + goal.minute + '</div>' +
+        '<span class="goal-comp">' + goal.competition + '</span>' +
+        '<h4 class="goal-matchup">' + goal.result + '</h4>' +
+        '<p class="goal-date">📅 ' + new Date(goal.date).toLocaleDateString('en-US',{year:"numeric",month:"long",day:"numeric"}) + ' — ' + goal.team + '</p>' +
+        '<div class="goal-meta">' +
+          '<span class="goal-tag">' + goal.type + '</span>' +
+          '<span class="goal-tag">' + goal.foot + '</span>' +
+          '<span class="goal-tag">vs ' + goal.opponent + '</span>' +
+        '</div>';
       this.container.appendChild(card);
     });
   }
 }
 
 // ============================================
-// CLASS: App
-// Main application controller
+// CLASS: OpponentDatabase — 18 curated opponents (15+ requirement)
+// ============================================
+class OpponentDatabase {
+  constructor() {
+    this.opponents = [
+      { name:"Real Madrid", flag:"🇪🇸", type:"club", goals:26, matches:45, hotTake:"Messi's favorite punching bag. 26 goals in El Clásico including THAT shirt celebration at the Bernabéu. He owns them.", keyMoment:"90+2' winner at Bernabéu (2017)" },
+      { name:"Sevilla", flag:"🇪🇸", type:"club", goals:38, matches:42, hotTake:"Messi has scored more goals against Sevilla than any other club team. They see him in their nightmares.", keyMoment:"Hat-trick to reach 50 La Liga hat-tricks" },
+      { name:"Athletic Bilbao", flag:"🇪🇸", type:"club", goals:26, matches:38, hotTake:"The Copa del Rey final solo goal in 2015 is arguably the greatest goal of all time. Bilbao never stood a chance.", keyMoment:"Solo run goal, Copa del Rey Final (2015)" },
+      { name:"Atlético Madrid", flag:"🇪🇸", type:"club", goals:32, matches:46, hotTake:"Even Simeone's defensive masterclasses couldn't stop Messi. 32 goals against the toughest defense in Spain.", keyMoment:"Minute 13' goal in Copa del Rey (2009)" },
+      { name:"Valencia", flag:"🇪🇸", type:"club", goals:30, matches:40, hotTake:"Messi treats Valencia like his personal playground. 30 goals against them including a 7-0 demolition.", keyMoment:"Barcelona 7-0 Valencia, Copa del Rey (2016)" },
+      { name:"Arsenal", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", type:"club", goals:9, matches:8, hotTake:"FOUR goals in one Champions League night in 2010. Wenger called it the best individual display he'd ever seen.", keyMoment:"4 goals in CL quarter-final (2010)" },
+      { name:"Bayern Munich", flag:"🇩🇪", type:"club", goals:8, matches:10, hotTake:"Made Boateng fall down, then chipped Neuer. Also scored in minute 9 in a 4-0 CL destruction. Bayern fears him.", keyMoment:"Boateng humiliation, CL Semi (2015)" },
+      { name:"PSG", flag:"🇫🇷", type:"club", goals:5, matches:6, hotTake:"La Remontada. 6-1. Minute 50 penalty. Barcelona's greatest comeback ever. PSG fans still have nightmares.", keyMoment:"Penalty in 6-1 La Remontada (2017)" },
+      { name:"AC Milan", flag:"🇮🇹", type:"club", goals:8, matches:7, hotTake:"That 4-0 comeback after losing 2-0 in the first leg. Plus a minute 5 goal in 2013. Milan was just a victim.", keyMoment:"2 goals in 4-0 CL comeback (2013)" },
+      { name:"Liverpool", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", type:"club", goals:4, matches:6, hotTake:"That minute 82 free kick in the Champions League semi-final at Camp Nou. A goal so perfect, physics cried.", keyMoment:"Iconic free kick, CL Semi (2019)" },
+      { name:"Bolivia", flag:"🇧🇴", type:"national", goals:11, matches:10, hotTake:"Messi's most-scored-against national team. Even at 3,600m altitude in La Paz, the man finds a way.", keyMoment:"Hat-trick to pass Pelé's record (2021)" },
+      { name:"Paraguay", flag:"🇵🇾", type:"national", goals:8, matches:11, hotTake:"Messi has demolished Paraguay in qualifiers multiple times. Minutes 12, 52, 63 — he scores at will against them.", keyMoment:"Two goals in a 5-2 WCQ win (2013)" },
+      { name:"Brazil", flag:"🇧🇷", type:"national", goals:5, matches:14, hotTake:"Minutes 31 and 85 against Brazil in a single match in 2012. The Superclásico de las Américas belongs to Messi.", keyMoment:"Two goals in Argentina 4-3 Brazil (2012)" },
+      { name:"France", flag:"🇫🇷", type:"national", goals:4, matches:6, hotTake:"Two goals in the World Cup Final. Including THAT minute 108 extra time rebound. Mbappé scored a hat-trick but Messi still won.", keyMoment:"2 goals in WC Final (2022)" },
+      { name:"Estonia", flag:"🇪🇪", type:"national", goals:5, matches:1, hotTake:"FIVE goals in ONE match. Minutes 8, 47, and more. Estonia was used for target practice. Sorry Estonia.", keyMoment:"5 goals in one match (2022)" },
+      { name:"Panama", flag:"🇵🇦", type:"national", goals:5, matches:2, hotTake:"Minutes 68 and 78 in a single Copa América demolition. A hat-trick in 19 minutes. Panama never recovered.", keyMoment:"Hat-trick in Copa América (2016)" },
+      { name:"Uruguay", flag:"🇺🇾", type:"national", goals:6, matches:12, hotTake:"Minute 43 WC qualifier winner in 2016. Messi always shows up against the Celeste. Suárez couldn't save them.", keyMoment:"Minute 43 WCQ winner (2016)" },
+      { name:"Croatia", flag:"🇭🇷", type:"national", goals:3, matches:4, hotTake:"Minute 34 penalty in the World Cup semi-final to break Batistuta's WC scoring record. History, live.", keyMoment:"Record-breaking WC semi penalty (2022)" },
+    ];
+  }
+  getAll() { return this.opponents; }
+  filter(query, type, goalsRange) {
+    let results = this.opponents;
+    if (query) { const q = query.toLowerCase(); results = results.filter(o => o.name.toLowerCase().includes(q) || o.hotTake.toLowerCase().includes(q)); }
+    if (type && type !== 'all') results = results.filter(o => o.type === type);
+    if (goalsRange && goalsRange !== 'all') {
+      if (goalsRange === '10+') results = results.filter(o => o.goals >= 10);
+      else if (goalsRange === '5+') results = results.filter(o => o.goals >= 5);
+      else if (goalsRange === '1-4') results = results.filter(o => o.goals <= 4);
+    }
+    return results;
+  }
+}
+
+// ============================================
+// CLASS: OpponentRenderer
+// ============================================
+class OpponentRenderer {
+  constructor(containerId) { this.container = document.getElementById(containerId); }
+  render(opponents) {
+    if (!this.container) return;
+    this.container.innerHTML = '';
+    if (opponents.length === 0) { this.container.innerHTML = '<div class="empty-container"><p class="empty-icon">🔍</p><p class="empty-text">No opponents match your search.</p></div>'; return; }
+    opponents.forEach(opp => {
+      const card = document.createElement('div');
+      card.className = 'team-card';
+      card.innerHTML =
+        '<div class="team-card-header"><span class="team-flag">' + opp.flag + '</span><div><h4 class="team-card-name">' + opp.name + '</h4><span class="team-card-region">' + (opp.type==='club'?'Club':'National Team') + '</span></div></div>' +
+        '<span class="team-rating-badge contender">⚽ ' + opp.goals + ' goals in ' + opp.matches + ' matches</span>' +
+        '<p class="team-hot-take">"' + opp.hotTake + '"</p>' +
+        '<p class="team-key-player">🎯 Key Moment: <strong>' + opp.keyMoment + '</strong></p>';
+      this.container.appendChild(card);
+    });
+  }
+}
+
+// ============================================
+// CLASS: App — Main controller
 // ============================================
 class App {
   constructor() {
     this.sidebarManager = new SidebarManager();
-    this.countdown = new CountdownTimer();
     this.api = new APIService(API_KEY);
-    this.predictionManager = new PredictionManager();
-    this.teamDatabase = new TeamDatabase();
-    this.matchesData = [];
+    this.goalDatabase = new GoalDatabase();
+    this.opponentDatabase = new OpponentDatabase();
     this.init();
   }
-
   init() {
-    // Determine which page we're on
     const path = window.location.pathname;
-
-    if (path.includes('predictions.html')) {
-      this.initPredictionsPage();
-    } else if (path.includes('teams.html')) {
-      this.initTeamsPage();
-    } else {
-      // Home page
-      this.loadMatches();
-    }
-
-    // Update prediction score in sidebar
-    this.predictionManager.updateScore();
+    if (path.includes('goals.html')) this.initGoalsPage();
+    else if (path.includes('opponents.html')) this.initOpponentsPage();
+    else this.initHomePage();
   }
 
-  // ---- HOME PAGE ----
-  async loadMatches() {
-    const renderer = new MatchRenderer('matchesGrid', 'matchesLoading', 'matchesError', 'matchesEmpty');
-    renderer.showLoading();
-
-    try {
-      const data = await this.api.getMatches();
-
-      if (!data.response || data.response.length === 0) {
-        renderer.showEmpty();
-        return;
-      }
-
-      this.matchesData = data.response;
-      // Show first 6 matches
-      const displayMatches = data.response.slice(0, 6);
-      renderer.renderMatches(displayMatches);
-      renderer.showContent();
-    } catch (error) {
-      console.error('Error loading matches:', error);
-      renderer.showError();
-    }
+  // HOME
+  initHomePage() {
+    const renderer = new GoalRenderer('featuredGoals');
+    if (renderer.container) renderer.render(this.goalDatabase.getFeatured());
   }
 
-  // ---- PREDICTIONS PAGE ----
-  initPredictionsPage() {
-    this.loadPredictionMatches();
-    this.setupPredictionFilters();
+  // GOALS PAGE
+  initGoalsPage() {
+    this.goalRenderer = new GoalRenderer('goalsGrid');
+    this.renderGoals();
+    this.setupGoalFilters();
+  }
+  renderGoals(goals) {
+    const display = goals || this.goalDatabase.getAll();
+    this.goalRenderer.render(display);
+    const c = document.getElementById('goalCount');
+    if (c) c.textContent = 'Showing ' + display.length + ' goal' + (display.length !== 1 ? 's' : '');
+  }
+  setupGoalFilters() {
+    const s = document.getElementById('goalSearch');
+    const c = document.getElementById('compFilter');
+    const m = document.getElementById('minuteFilter');
+    const t = document.getElementById('teamFilter');
+    const apply = () => this.renderGoals(this.goalDatabase.filter(s?.value, c?.value, m?.value, t?.value));
+    if (s) s.addEventListener('input', apply);
+    if (c) c.addEventListener('change', apply);
+    if (m) m.addEventListener('change', apply);
+    if (t) t.addEventListener('change', apply);
   }
 
-  async loadPredictionMatches() {
-    const container = document.getElementById('predictionsGrid');
-    const loading = document.getElementById('predictLoading');
-    const error = document.getElementById('predictError');
-    const empty = document.getElementById('predictEmpty');
-
-    if (loading) loading.classList.remove('d-none');
-    if (error) error.classList.add('d-none');
-    if (empty) empty.classList.add('d-none');
-    if (container) container.classList.add('d-none');
-
-    try {
-      const data = await this.api.getMatches();
-
-      if (!data.response || data.response.length === 0) {
-        if (loading) loading.classList.add('d-none');
-        if (empty) empty.classList.remove('d-none');
-        return;
-      }
-
-      this.matchesData = data.response;
-      this.predictionManager.renderPredictionCards(data.response, container);
-      if (loading) loading.classList.add('d-none');
-      if (container) container.classList.remove('d-none');
-    } catch (err) {
-      console.error('Error loading prediction matches:', err);
-      if (loading) loading.classList.add('d-none');
-      if (error) error.classList.remove('d-none');
-    }
-  }
-
-  setupPredictionFilters() {
-    const searchInput = document.getElementById('matchSearch');
-    const statusFilter = document.getElementById('statusFilter');
-
-    if (searchInput) {
-      searchInput.addEventListener('input', () => this.filterPredictions());
-    }
-
-    if (statusFilter) {
-      statusFilter.addEventListener('change', () => this.filterPredictions());
-    }
-  }
-
-  filterPredictions() {
-    const query = document.getElementById('matchSearch')?.value.toLowerCase() || '';
-    const status = document.getElementById('statusFilter')?.value || 'all';
-    const cards = document.querySelectorAll('.prediction-card');
-
-    cards.forEach(card => {
-      const home = card.getAttribute('data-home');
-      const away = card.getAttribute('data-away');
-      const cardStatus = card.getAttribute('data-status');
-
-      const matchesSearch = !query || home.includes(query) || away.includes(query);
-
-      let matchesStatus = true;
-      if (status === 'NS') {
-        matchesStatus = cardStatus === 'NS';
-      } else if (status === 'LIVE') {
-        matchesStatus = ['1H', '2H', 'HT', 'ET', 'P', 'BT', 'LIVE'].includes(cardStatus);
-      } else if (status === 'FT') {
-        matchesStatus = ['FT', 'AET', 'PEN'].includes(cardStatus);
-      }
-
-      card.style.display = (matchesSearch && matchesStatus) ? '' : 'none';
-    });
-  }
-
-  predict(matchId, teamId) {
-    this.predictionManager.setPrediction(matchId, teamId);
-    // Re-render predictions
-    const container = document.getElementById('predictionsGrid');
-    if (container && this.matchesData.length > 0) {
-      this.predictionManager.renderPredictionCards(this.matchesData, container);
-      this.filterPredictions();
-    }
-  }
-
-  // ---- TEAMS PAGE ----
-  initTeamsPage() {
-    this.teamRenderer = new TeamRenderer('teamsGrid');
-    this.renderTeams();
-    this.setupTeamFilters();
+  // OPPONENTS PAGE
+  initOpponentsPage() {
+    this.opponentRenderer = new OpponentRenderer('opponentsGrid');
+    this.renderOpponents();
+    this.setupOpponentFilters();
     this.setupAPITeamSearch();
   }
-
-  renderTeams(teams = null) {
-    const displayTeams = teams || this.teamDatabase.getAll();
-    if (this.teamRenderer) {
-      this.teamRenderer.render(displayTeams);
-    }
-    const countEl = document.getElementById('resultsCount');
-    if (countEl) {
-      countEl.textContent = `Showing ${displayTeams.length} team${displayTeams.length !== 1 ? 's' : ''}`;
-    }
+  renderOpponents(opponents) {
+    const display = opponents || this.opponentDatabase.getAll();
+    this.opponentRenderer.render(display);
+    const c = document.getElementById('resultsCount');
+    if (c) c.textContent = 'Showing ' + display.length + ' opponent' + (display.length !== 1 ? 's' : '');
   }
-
-  setupTeamFilters() {
-    const searchInput = document.getElementById('teamSearch');
-    const regionFilter = document.getElementById('regionFilter');
-    const ratingFilter = document.getElementById('ratingFilter');
-
-    const applyFilters = () => {
-      const query = searchInput?.value || '';
-      const region = regionFilter?.value || 'all';
-      const rating = ratingFilter?.value || 'all';
-      const results = this.teamDatabase.filter(query, region, rating);
-      this.renderTeams(results);
-    };
-
-    if (searchInput) searchInput.addEventListener('input', applyFilters);
-    if (regionFilter) regionFilter.addEventListener('change', applyFilters);
-    if (ratingFilter) ratingFilter.addEventListener('change', applyFilters);
+  setupOpponentFilters() {
+    const s = document.getElementById('opponentSearch');
+    const t = document.getElementById('typeFilter');
+    const g = document.getElementById('goalsFilter');
+    const apply = () => this.renderOpponents(this.opponentDatabase.filter(s?.value, t?.value, g?.value));
+    if (s) s.addEventListener('input', apply);
+    if (t) t.addEventListener('change', apply);
+    if (g) g.addEventListener('change', apply);
   }
-
   setupAPITeamSearch() {
-    const searchBtn = document.getElementById('apiSearchBtn');
-    const searchInput = document.getElementById('apiTeamSearch');
-
-    if (searchBtn) {
-      searchBtn.addEventListener('click', () => this.searchAPITeam());
-    }
-
-    if (searchInput) {
-      searchInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') this.searchAPITeam();
-      });
-    }
+    const btn = document.getElementById('apiSearchBtn');
+    const input = document.getElementById('apiTeamSearch');
+    if (btn) btn.addEventListener('click', () => this.searchAPITeam());
+    if (input) input.addEventListener('keypress', (e) => { if (e.key === 'Enter') this.searchAPITeam(); });
   }
-
   async searchAPITeam() {
     const input = document.getElementById('apiTeamSearch');
     const loading = document.getElementById('apiTeamLoading');
@@ -874,63 +372,31 @@ class App {
     const errorText = document.getElementById('apiTeamErrorText');
     const results = document.getElementById('apiTeamResults');
     const query = input?.value.trim();
-
     if (!query) return;
-
-    // Show loading
     if (loading) loading.classList.remove('d-none');
     if (error) error.classList.add('d-none');
     if (results) results.classList.add('d-none');
-
     try {
       const data = await this.api.searchTeam(query);
-
       if (!data.response || data.response.length === 0) {
         if (loading) loading.classList.add('d-none');
         if (error) error.classList.remove('d-none');
-        if (errorText) errorText.textContent = `No team found for "${query}". Try another name.`;
+        if (errorText) errorText.textContent = 'No team found for "' + query + '".';
         return;
       }
-
-      // Display first result
       const team = data.response[0].team;
       const venue = data.response[0].venue;
-
       if (results) {
-        results.innerHTML = `
-          <div class="api-team-card">
-            <img src="${team.logo}" alt="${team.name}" class="api-team-logo">
-            <div class="api-team-info">
-              <h3>${team.name}</h3>
-              <p>${team.country || 'Unknown country'} • Founded: ${team.founded || 'N/A'}</p>
-              ${venue ? `<p>🏟️ ${venue.name} (${venue.city}) — Capacity: ${venue.capacity?.toLocaleString() || 'N/A'}</p>` : ''}
-              <div class="api-team-stats">
-                <div class="api-stat">
-                  <span class="api-stat-value">${team.id}</span>
-                  <span class="api-stat-label">API ID</span>
-                </div>
-                <div class="api-stat">
-                  <span class="api-stat-value">${team.national ? 'Yes' : 'No'}</span>
-                  <span class="api-stat-label">National Team</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
+        results.innerHTML = '<div class="api-team-card"><img src="' + team.logo + '" alt="' + team.name + '" class="api-team-logo"><div class="api-team-info"><h3>' + team.name + '</h3><p>' + (team.country||'Unknown') + ' • Founded: ' + (team.founded||'N/A') + '</p>' + (venue ? '<p>🏟️ ' + venue.name + ' (' + venue.city + ') — Capacity: ' + (venue.capacity?.toLocaleString()||'N/A') + '</p>' : '') + '<div class="api-team-stats"><div class="api-stat"><span class="api-stat-value">' + (team.national?'National':'Club') + '</span><span class="api-stat-label">Type</span></div><div class="api-stat"><span class="api-stat-value">' + (team.founded||'?') + '</span><span class="api-stat-label">Founded</span></div></div></div></div>';
         results.classList.remove('d-none');
       }
-
       if (loading) loading.classList.add('d-none');
     } catch (err) {
-      console.error('API Team search error:', err);
       if (loading) loading.classList.add('d-none');
       if (error) error.classList.remove('d-none');
-      if (errorText) errorText.textContent = 'Failed to fetch team data. Check your API key or try again.';
+      if (errorText) errorText.textContent = 'Failed to fetch. Check API key or try again.';
     }
   }
 }
 
-// ============================================
-// Initialize the app when DOM is ready
-// ============================================
 const app = new App();
