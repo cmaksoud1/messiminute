@@ -4,7 +4,6 @@
 **University:** Lebanese University, Faculty of Engineering, Branch 2 — Roumieh  
 **Course:** Full Stack Development — Final Project 2026  
 
----
 
 ## About the Project
 
@@ -12,7 +11,6 @@
 
 The site features 95 real, verified goals (one per minute) with match data sourced from MessiStats.com, an Argentina-inspired design theme, and live team data from the API-Football API.
 
----
 
 ## API Used
 
@@ -21,7 +19,6 @@ The site features 95 real, verified goals (one per minute) with match data sourc
 - Used for: searching and fetching live team data (logos, stadium info, founding year) on the Opponents page  
 - Includes: loading state, error state, and empty state handling  
 
----
 
 ## Pages
 
@@ -45,7 +42,7 @@ The sidebar is implemented as a fixed `<aside>` element that:
 
 The sidebar behavior is managed by the `SidebarManager` ES6 class in `js/app.js`, with CSS media queries handling the responsive show/hide behavior.
 
----
+
 
 ## Data Sources
 
@@ -53,7 +50,7 @@ The sidebar behavior is managed by the `SidebarManager` ES6 class in `js/app.js`
 - **Record statistics:** Cross-referenced with [Transfermarkt](https://www.transfermarkt.com) and Wikipedia
 - **Live team data:** [API-Football](https://www.api-football.com/) API
 
----
+
 
 ## AI-Use Appendix
 
@@ -70,23 +67,20 @@ The sidebar behavior is managed by the `SidebarManager` ES6 class in `js/app.js`
 
 ### What the AI Got Wrong
 
-1. **Topic indecision wasted time:** Claude kept pushing for a "Priced in Sats" (Bitcoin) website theme even when I wanted to do a World Cup site. Then it pushed the World Cup idea when I wanted to switch to a Messi goals concept. The AI was too insistent on sticking with earlier decisions, which cost planning time. I had to firmly redirect the conversation multiple times.
+1. **Topic indecision wasted time:** Claude kept pushing website theme ideas even when I wanted to do a World Cup site. Then it pushed the World Cup idea when I wanted to switch to a Messi goals concept. The AI was too insistent on sticking with earlier decisions, which cost planning time. I had to firmly redirect the conversation multiple times.
 
-2. **Fake match data:** When building the World Cup version, Claude hardcoded fictional match results and brackets (e.g., "Argentina vs Spain in the Final") as if they were real 2026 World Cup data. I caught this because the matches didn't match real fixtures and called it out. The fix was to switch to real, verified data from MessiStats.com that I manually collected for every minute from 2' to 90'.
+2. **Fake match data:** When building the World Cup version, Claude hardcoded fictional match results and brackets (ex: Argentina vs Spain in the Final) as if they were real 2026 World Cup data. I caught this because the matches didn't match real fixtures and called it out. The fix was to switch to real, verified data from MessiStats.com that I manually collected for every minute from 2' to 90'.
 
 3. **API CORS issues:** Claude initially configured the API-Football calls to use direct browser requests, which caused CORS (Cross-Origin Request Blocked) errors in the console. The API's free tier doesn't support browser-to-API calls without proper headers. We had to debug this by checking the console, adjusting headers, and testing with different API configurations.
 
----
 
 ## Screenshots
 
 *(Add screenshots at mobile, tablet, and desktop widths)*
 
-- `screenshots/desktop.png`
-- `screenshots/tablet.png`  
+- `screenshots/desktop.png`  
 - `screenshots/mobile.png`
 
----
 
 ## How to Run
 
@@ -94,9 +88,8 @@ The sidebar behavior is managed by the `SidebarManager` ES6 class in `js/app.js`
 2. Open `index.html` in a browser (or use VS Code Live Server)
 3. Replace `YOUR_API_KEY_HERE` in `js/app.js` with your API-Football key from [api-sports.io](https://www.api-football.com/)
 
----
 
 ## Deployment
 
-Live URL: *(Add your deployed URL here)*  
-GitHub Repository: *(Add your repo URL here)*
+Live URL: https://cmaksoud1.github.io/messiminute/
+GitHub Repository: https://github.com/cmaksoud1/messiminute
